@@ -1,0 +1,37 @@
+ Sub test1()
+
+    Dim obIE As Object
+    Dim el As Object
+    Dim el2 As Object
+    
+
+    Set obIE = CreateObject("InternetExplorer.Application")
+    obIE.Visible = True      'IEを見えるようにします
+
+    obIE.navigate "https://www.google.com/?hl=ja"
+    
+        While obIE.readyState <> 4 Or obIE.Busy = True '決まり文句。
+           DoEvents                                   '開くまで繰り返します
+        Wend
+    
+    Set el = obIE.document.getElementsByClassName("gLFyf gsfi")(0)
+             
+        el.Value = "テスト"
+    
+    Application.Wait Now() + TimeValue("0:00:03")
+    
+    Set el2 = obIE.document.getElementsByName("btnK")(0)
+        el2.Click
+    
+        While obIE.readyState <> 4 Or obIE.Busy = True '決まり文句。
+           DoEvents                                   '開くまで繰り返します
+        Wend
+    
+    Application.Wait Now() + TimeValue("0:00:03")
+
+    obIE.Quit
+
+End Sub
+
+
+

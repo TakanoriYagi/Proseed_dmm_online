@@ -1,0 +1,19 @@
+ Sub test1()
+
+    Dim obIE As Object
+
+    Set obIE = CreateObject("InternetExplorer.Application")
+    obIE.Visible = True      'IE‚ğŒ©‚¦‚é‚æ‚¤‚É‚µ‚Ü‚·
+
+    obIE.navigate "https://proseed.tech/"
+    
+        While obIE.readyState <> 4 Or obIE.Busy = True 'Œˆ‚Ü‚è•¶‹åB
+           DoEvents                                   'ŠJ‚­‚Ü‚ÅŒJ‚è•Ô‚µ‚Ü‚·
+        Wend
+    
+    Application.Wait Now() + TimeValue("0:00:05")
+
+    obIE.Quit
+
+End Sub
+

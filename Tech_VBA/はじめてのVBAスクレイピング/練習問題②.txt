@@ -1,0 +1,47 @@
+Sub 練習②()
+    
+    
+    Dim obIE As Object
+    Dim kensaku As Object
+    Dim kensaku_botan As Object
+    Dim kobetu_url As Object
+    Dim i As Long
+
+
+    Set obIE = CreateObject("InternetExplorer.Application")
+    obIE.Visible = True      'IEを見えるようにします
+    
+        
+    ' カーセンサーのトップページに行っています。
+    obIE.navigate "https://www.carsensor.net/"
+    
+    While obIE.readyState <> 4 Or obIE.Busy = True '決まり文句。
+       DoEvents                                   '開くまで繰り返します
+    Wend
+    
+    ' カーセンサーの検索窓に入力をています。
+    Set kensaku = obIE.document.getElementById("js-fw-input")
+        kensaku.Value = "ロードスター"
+    
+    ' カーセンサーの検索ボタンをクリックしています。
+    Set kensaku_botan = obIE.document.getElementsByClassName("freewordWrap__submit")(0)
+        kensaku_botan.Click
+
+    While obIE.readyState <> 4 Or obIE.Busy = True '決まり文句。
+       DoEvents                                   '開くまで繰り返します
+    Wend
+        
+    ' 念のため、2秒待機
+    Application.Wait Now() + TimeValue("0:00:02")
+    
+    For i = 0 To 29
+        
+        ' 個別ページのURLを取得しています。
+        Set kobetu_url = obIE.document.getElementsByClassName("casetMedia__body__title")(i).getElementsByTagName("a")(0)
+        
+        Cells(i + 1, "A").Value = kobetu_url.href
+    
+    Next i
+    
+
+End Sub

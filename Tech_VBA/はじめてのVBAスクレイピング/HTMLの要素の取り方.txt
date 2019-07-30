@@ -1,0 +1,28 @@
+ Sub test1()
+
+    Dim obIE As Object
+    Dim el As Object
+    Dim i As Long
+    
+
+    Set obIE = CreateObject("InternetExplorer.Application")
+    obIE.Visible = True      'IEÇå©Ç¶ÇÈÇÊÇ§Ç…ÇµÇ‹Ç∑
+
+    obIE.navigate "https://www.proseed.co.jp/company/consultant/yagi"
+    
+        While obIE.readyState <> 4 Or obIE.Busy = True 'åàÇ‹ÇËï∂ãÂÅB
+           DoEvents                                   'äJÇ≠Ç‹Ç≈åJÇËï‘ÇµÇ‹Ç∑
+        Wend
+    
+    Set el = obIE.document.getElementById("hs_cos_wrapper_widget_1528875162162")
+             
+        Cells(2, 2).Value = el.innerText
+    
+    'Application.Wait Now() + TimeValue("0:00:05")
+
+    obIE.Quit
+
+End Sub
+
+
+

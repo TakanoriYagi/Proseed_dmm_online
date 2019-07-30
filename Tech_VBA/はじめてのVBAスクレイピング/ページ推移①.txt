@@ -1,0 +1,39 @@
+ Sub page_transfer1()
+    
+    Dim obIE As Object
+    Dim kensaku As Object
+    Dim kensaku_botan As Object
+    Dim next_page As Object
+
+    Set obIE = CreateObject("InternetExplorer.Application")
+    obIE.Visible = True      'IEを見えるようにします
+    
+        
+    ' カーセンサーのトップページに行っています。
+    obIE.navigate "https://www.carsensor.net/"
+    
+        While obIE.readyState <> 4 Or obIE.Busy = True '決まり文句。
+           DoEvents                                   '開くまで繰り返します
+        Wend
+        
+        ' カーセンサーの検索窓に入力をています。
+        Set kensaku = obIE.document.getElementById("js-fw-input")
+            kensaku.Value = "マツダ　ロードスター"
+        
+        ' カーセンサーの検索ボタンをクリックしています。
+        Set kensaku_botan = obIE.document.getElementsByClassName("freewordWrap__submit")(0)
+            kensaku_botan.Click
+    
+        While obIE.readyState <> 4 Or obIE.Busy = True '決まり文句。
+           DoEvents                                   '開くまで繰り返します
+        Wend
+            
+        ' 念のため、2秒待機
+        Application.Wait Now() + TimeValue("0:00:02")
+        
+        ' 次ページへのボタンをクリックしています。
+        Set next_page = obIE.document.getElementsByClassName("pager__btn__next")(0)
+            next_page.Click
+        
+
+End Sub

@@ -1,0 +1,79 @@
+Sub 練習④()
+    
+    
+    Dim obIE As Object
+    Dim kensaku As Object
+    Dim kensaku_botan As Object
+    Dim kobetu_url As Object
+    Dim i As Long
+    Dim j As Long
+    Dim next_page As Object
+    Dim kensuu1 As Variant
+    Dim kensuu2 As Variant
+    Dim rupukaisuu As Variant
+
+
+    Set obIE = CreateObject("InternetExplorer.Application")
+    obIE.Visible = True      'IEを見えるようにします
+    
+        
+    ' カーセンサーのトップページに行っています。
+    obIE.navigate "https://www.carsensor.net/"
+    
+    While obIE.readyState <> 4 Or obIE.Busy = True '決まり文句。
+       DoEvents                                   '開くまで繰り返します
+    Wend
+    
+    ' カーセンサーの検索窓に入力をています。
+    Set kensaku = obIE.document.getElementById("js-fw-input")
+        kensaku.Value = "ランボルギーニ　ロードスター"
+    
+    ' カーセンサーの検索ボタンをクリックしています。
+    Set kensaku_botan = obIE.document.getElementsByClassName("freewordWrap__submit")(0)
+        kensaku_botan.Click
+
+    While obIE.readyState <> 4 Or obIE.Busy = True '決まり文句。
+       DoEvents                                   '開くまで繰り返します
+    Wend
+        
+    ' 念のため、2秒待機
+    Application.Wait Now() + TimeValue("0:00:02")
+    
+    Set kensuu1 = obIE.document.getElementsByClassName("resultBar__result")(0)
+    kensuu2 = Replace(kensuu1.innerText, "台", "")
+    
+    rupukaisuu = kensuu2 \ 30
+    
+    For i = 0 To rupukaisuu
+        
+        For j = 0 To 29
+        
+            Set kobetu_url = Nothing
+            
+            On Error Resume Next
+            ' 個別ページのURLを取得しています。
+            Set kobetu_url = obIE.document.getElementsByClassName("casetMedia__body__title")(j).getElementsByTagName("a")(0)
+            
+            If Not kobetu_url Is Nothing Then
+            
+                Cells(i * 30 + j + 1, "A").Value = kobetu_url.href
+            
+            End If
+        
+        Next j
+        
+        ' 次ページへのボタンをクリックしています。
+        Set next_page = obIE.document.getElementsByClassName("pager__btn")(0).getElementsByTagName("button")(1)
+            next_page.Click
+            
+        While obIE.readyState <> 4 Or obIE.Busy = True '決まり文句。
+            DoEvents                                   '開くまで繰り返します
+        Wend
+        
+        ' 念のため、2秒待機
+        Application.Wait Now() + TimeValue("0:00:02")
+    
+    Next i
+    
+
+End Sub
